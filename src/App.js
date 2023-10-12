@@ -1,64 +1,61 @@
 import "./App.css";
 import AppFooter from "./components/AppFooter/AppFooter";
 import AppHeader from "./components/AppHeader/AppHeader";
-import MainForm from "./components/MainForm/MainForm";
-import MemoryCell from "./components/MemoryCell/MemoryCell";
-import Card from "./components/Card";
+import { useState, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
-import Carroussel from "./components/Carroussel";
+
+import Loading from "./components/Loading/Loading";
+import Card from "./components/Card";
+
 function App() {
-  let cards = [
-    {
-      key: uuidv4(),
-      content: (
-        <Card
-          image="https://updates.theme-fusion.com/wp-content/uploads/2017/12/convertplus_thumbnail.jpg"
-          text="מוקדש לי"
-          songName="השיר שלי"
-          songLink="https://www.youtube.com/watch?v=V9hav4QPSeU"
-        />
-      ),
-    },
-    {
-      key: uuidv4(),
-      content: (
-        <Card image="https://updates.theme-fusion.com/wp-content/uploads/2017/12/acf_pro.png" />
-      ),
-    },
-    {
-      key: uuidv4(),
-      content: (
-        <Card image="https://updates.theme-fusion.com/wp-content/uploads/2017/12/layer_slider_plugin_thumb.png" />
-      ),
-    },
-    {
-      key: uuidv4(),
-      content: (
-        <Card image="https://updates.theme-fusion.com/wp-content/uploads/2016/08/slider_revolution-1.png" />
-      ),
-    },
-    {
-      key: uuidv4(),
-      content: (
-        <Card image="https://updates.theme-fusion.com/wp-content/uploads/2019/01/pwa_880_660.jpg" />
-      ),
-    },
-  ];
+  const [cardsList, setCardsList] = useState([]);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    fetch(
+      "https://script.google.com/macros/s/AKfycbxarKoxOW1GBMVZV5Fu9NtLorAcpcNaFSGRgNV5_j3friPb5MyK9JZ9OPJ7E7524yO8/exec"
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        let tempList = [];
+        data.forEach((element) => {
+          let tempContent = (
+            <Card
+              image={element.Image}
+              text={element.Text}
+              songName={element["Song Name"]}
+              songLink={element["Song Link"]}
+              Title={element.Title}
+              Poster={element.Poster}
+            />
+          );
+          tempList.push({
+            key: uuidv4(),
+            content: tempContent,
+          });
+        });
+        setCardsList(tempList);
+      });
+  }, []);
+  useEffect(() => {
+    if (cardsList.length > 0) {
+      console.log(cardsList);
+      setLoading(false);
+    }
+  }, [cardsList]);
   return (
     <div className="App">
-      <AppHeader />
+      {/* <AppHeader /> */}
       {/* <div className="main">{ <MainForm /> <MemoryCell />}</div> */}
       <div className="">
-        <Carroussel
-          cards={cards}
-          height="80vh"
-          width="30%"
-          margin="0 auto"
-          offset={2}
-          showArrows={false}
-        />
+        {!loading ? (
+          cardsList.map((element) => {
+            return element.content;
+          })
+        ) : (
+          <Loading />
+        )}
       </div>
-      <AppFooter />
+      {/* <AppFooter /> */}
     </div>
   );
 }
