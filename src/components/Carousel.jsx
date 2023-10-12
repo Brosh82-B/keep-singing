@@ -8,7 +8,7 @@ export default function Carroussel(props) {
   });
 
   const [offsetRadius, setOffsetRadius] = useState(2);
-  const [showArrows, setShowArrows] = useState(true);
+  const [showArrows, setShowArrows] = useState(false);
   const [goToSlide, setGoToSlide] = useState(null);
   const [cards] = useState(table);
 
@@ -19,10 +19,7 @@ export default function Carroussel(props) {
 
   return (
     <div
-      style={{ width: props.width, height: props.height, margin: props.margin,
-        // flexGrow: "1",
-        // textAlign: "right"
-       }}
+      style={{ width: props.width, height: props.height, margin: props.margin }}
     >
       <Carousel
         slides={cards}

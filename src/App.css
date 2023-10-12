@@ -12,3 +12,14 @@
   display: flex;
 
 }
+.header{
+  text-align: center;
+}
+.how-are-we{
+  direction: rtl;
+  text-align: center;
+  width: 90%;
+  margin: 0 auto;
+  margin-bottom: 5%;
+  margin-top: 5%;
+}
