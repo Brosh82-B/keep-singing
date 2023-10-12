@@ -1,17 +1,17 @@
 {
   "files": {
-    "main.css": "/keep-singing/static/css/main.75983770.css",
-    "main.js": "/keep-singing/static/js/main.6fe1033a.js",
+    "main.css": "/keep-singing/static/css/main.304b95d7.css",
+    "main.js": "/keep-singing/static/js/main.abf0ad22.js",
     "static/media/slick.svg": "/keep-singing/static/media/slick.2630a3e3eab21c607e21.svg",
     "static/media/slick.eot": "/keep-singing/static/media/slick.a4e97f5a2a64f0ab1323.eot",
     "static/media/slick.ttf": "/keep-singing/static/media/slick.c94f7671dcc99dce43e2.ttf",
     "static/media/slick.woff": "/keep-singing/static/media/slick.295183786cd8a1389865.woff",
     "index.html": "/keep-singing/index.html",
-    "main.75983770.css.map": "/keep-singing/static/css/main.75983770.css.map",
-    "main.6fe1033a.js.map": "/keep-singing/static/js/main.6fe1033a.js.map"
+    "main.304b95d7.css.map": "/keep-singing/static/css/main.304b95d7.css.map",
+    "main.abf0ad22.js.map": "/keep-singing/static/js/main.abf0ad22.js.map"
   },
   "entrypoints": [
-    "static/css/main.75983770.css",
-    "static/js/main.6fe1033a.js"
+    "static/css/main.304b95d7.css",
+    "static/js/main.abf0ad22.js"
   ]
 }
