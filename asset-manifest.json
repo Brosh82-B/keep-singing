@@ -1,17 +1,17 @@
 {
   "files": {
     "main.css": "/keep-singing/static/css/main.7b5b50af.css",
-    "main.js": "/keep-singing/static/js/main.2fc3e26e.js",
+    "main.js": "/keep-singing/static/js/main.5f109a37.js",
     "static/media/slick.svg": "/keep-singing/static/media/slick.2630a3e3eab21c607e21.svg",
     "static/media/slick.eot": "/keep-singing/static/media/slick.a4e97f5a2a64f0ab1323.eot",
     "static/media/slick.ttf": "/keep-singing/static/media/slick.c94f7671dcc99dce43e2.ttf",
     "static/media/slick.woff": "/keep-singing/static/media/slick.295183786cd8a1389865.woff",
     "index.html": "/keep-singing/index.html",
     "main.7b5b50af.css.map": "/keep-singing/static/css/main.7b5b50af.css.map",
-    "main.2fc3e26e.js.map": "/keep-singing/static/js/main.2fc3e26e.js.map"
+    "main.5f109a37.js.map": "/keep-singing/static/js/main.5f109a37.js.map"
   },
   "entrypoints": [
     "static/css/main.7b5b50af.css",
-    "static/js/main.2fc3e26e.js"
+    "static/js/main.5f109a37.js"
   ]
 }
