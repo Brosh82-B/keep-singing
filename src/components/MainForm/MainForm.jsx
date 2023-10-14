@@ -23,33 +23,46 @@ function MainForm(props) {
       fileInputRef.current.click();
     };
 
+    function isYouTubeLink(url) {
+        // Regular expression to match both standard and shortened YouTube video URLs
+        const youtubeRegex = /^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)[\w-]+/;
+      
+        // Test if the provided URL matches the regex
+        return youtubeRegex.test(url);
+      }
 
     const uploadImage = async () => {
         if (!selectedFile) return;
-    
-        const formData = new FormData();
-        formData.append('file', selectedFile);
-        formData.append('upload_preset', 'fpl0cyrm'); // Replace with your Cloudinary upload preset
-    
-        try {
-          const response = await axios.post(
-            `https://api.cloudinary.com/v1_1/dxgpdylke/image/upload`, // Replace with your Cloudinary cloud name
-            formData,
-            {
-              onUploadProgress: (progressEvent) => {
-                const progress = Math.round((progressEvent.loaded / progressEvent.total) * 100);
-                console.log(progress)
-              },
+        if (selectedFile.type.startsWith('image/')) {
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+            formData.append('upload_preset', 'fpl0cyrm'); // Replace with your Cloudinary upload preset
+        
+            try {
+              const response = await axios.post(
+                `https://api.cloudinary.com/v1_1/dxgpdylke/image/upload`, // Replace with your Cloudinary cloud name
+                formData,
+                {
+                  onUploadProgress: (progressEvent) => {
+                    const progress = Math.round((progressEvent.loaded / progressEvent.total) * 100);
+                    console.log(progress)
+                  },
+                }
+              );
+              setFileLink(response.data.secure_url)
+                return response.data.secure_url
+            } catch (error) {
+              console.error('Error uploading image to Cloudinary:', error);
             }
-          );
-          setFileLink(response.data.secure_url)
-            return response.data.secure_url
-        } catch (error) {
-          console.error('Error uploading image to Cloudinary:', error);
+        }
+        else{
+            alert('לא זוהה לינק מיוטיוב');
         }
       };
+
     const handleFileChange = (e) => {
     setSelectedFile(e.target.files[0]);
+    setFileLink('')
     }
     useEffect(()=>{uploadImage()},[selectedFile])
     useEffect(() => {
@@ -64,34 +77,40 @@ function MainForm(props) {
         }
     }, [isLoading]);
     function sendToBackEnd(){
-        const scriptUrl = 'https://script.google.com/macros/s/AKfycbxGP3KCZSJnPGV6Od6yb_cxs1Nd6KdSC6jtX4t36jwx6r1iCJgU9QTOAr9PRHaES8Qe/exec';
+        if (isYouTubeLink(songLink)){
+            setIsLoading(true)
 
-        const formData = new FormData();
-        formData.append('Text', text);
-        formData.append('Song Name', songName);
-        formData.append('Song Link', songLink);
-        formData.append('Poster', poster);
-        formData.append('fileLink', fileLink);
-
-        axios.post(scriptUrl, formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data', // Set the Content-Type header to multipart/form-data
-            },
-        })
-            .then((response) => {
-                setIsLoading(false);
-                props.setFormIsOpen(false)
-                console.log(response.data);
-                // window.location.href = response.data;
+            const scriptUrl = 'https://script.google.com/macros/s/AKfycbxGP3KCZSJnPGV6Od6yb_cxs1Nd6KdSC6jtX4t36jwx6r1iCJgU9QTOAr9PRHaES8Qe/exec';
+    
+            const formData = new FormData();
+            formData.append('Text', text);
+            formData.append('Song Name', songName);
+            formData.append('Song Link', songLink);
+            formData.append('Poster', poster);
+            formData.append('fileLink', fileLink);
+    
+            axios.post(scriptUrl, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data', // Set the Content-Type header to multipart/form-data
+                },
             })
-            .catch((error) => {
-                setIsLoading(false);
-            });
+                .then((response) => {
+                    setIsLoading(false);
+                    props.setFormIsOpen(false)
+                    console.log(response.data);
+                    // window.location.href = response.data;
+                })
+                .catch((error) => {
+                    setIsLoading(false);
+                });
+        }
+        else{
+            alert("בבקשה הכנס לינק מיוטיוב")
+        }
     }
     function handleSubmit() {
         try {
             // Replace with your Google Apps Script web app URL
-            setIsLoading(true)
             if (fileLink!==''){
                 sendToBackEnd()
             }
@@ -113,6 +132,16 @@ function MainForm(props) {
     return (
         <div className="main-form">
             <div className='input-block'>
+                <label className='form-input-lable'>תמונה</label>
+                <button onClick={openFileInput} className='form-input' style={{textAlign:"center",border:"2px solid", borderColor:fileLink===''?"black":"green" }}>בחר תמונה</button>
+                <input
+        type="file"
+        ref={fileInputRef}
+        style={{ display: 'none' }}
+        onChange={handleFileChange}
+      />
+            </div>
+            <div className='input-block'>
                 <label className='form-input-lable'>הקדשה</label>
                 <textarea type='text' className='form-input' dir='rtl' value={text} onChange={(value) => { setText(value.target.value) }}></textarea>
             </div>
@@ -127,16 +156,6 @@ function MainForm(props) {
             <div className='input-block'>
                 <label className='form-input-lable'>לינק לשיר</label>
                 <input type='text' className='form-input' dir='rtl' value={songLink} onChange={(value) => { setSongLink(value.target.value) }}></input>
-            </div>
-            <div className='input-block'>
-                <label className='form-input-lable'>תמונה</label>
-                <button onClick={openFileInput} className='form-input' style={{textAlign:"center", borderColor:fileLink===''?"black":"green" }}>בחר תמונה</button>
-                <input
-        type="file"
-        ref={fileInputRef}
-        style={{ display: 'none' }}
-        onChange={handleFileChange}
-      />
             </div>
             <button
                 className={`submit-button ${isLoading ? 'loading' : ''}`}

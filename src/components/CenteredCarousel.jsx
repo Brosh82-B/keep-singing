@@ -35,7 +35,7 @@ function CenteredCarousel (props) {
             Poster={element.Poster}
           />);
         });
-        setCardsList(tempList);
+        setCardsList(tempList.reverse());
       });
   }, []);
 
