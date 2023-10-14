@@ -56,7 +56,7 @@ function MainForm(props) {
             }
         }
         else{
-            alert('לא זוהה לינק מיוטיוב');
+            alert('בבקשה בחר תמונה בלבד');
         }
       };
 
@@ -105,7 +105,7 @@ function MainForm(props) {
                 });
         }
         else{
-            alert("בבקשה הכנס לינק מיוטיוב")
+            alert("לא זוהה לינק מיוטיוב")
         }
     }
     function handleSubmit() {
