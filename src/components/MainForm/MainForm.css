@@ -1,10 +1,13 @@
 .main-form {
-    background-color: #FFFFFF;
+    background-color: #A9C5B9;
     border-radius: 5px;
-    flex-grow: 1;
     text-align: right;
     padding: 3vh 5vw 3vh 5vw;
+    z-index: 100;
 
+    width: 70vw;
+    margin: 0 auto;
+    margin-bottom: 5vh;
 
 }
 

@@ -1,17 +1,57 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 
+
 import './MainForm.css';
-function MainForm() {
+
+
+
+function MainForm(props) {
     const [isLoading, setIsLoading] = useState(false);
     const [dots, setDots] = useState('');
 
-    const [title, setTitle] = useState('');
-    const [fullName, setFullName] = useState('');
-    const [teamNumber, setTeamNumber] = useState('');
-    const [context, setContext] = useState('');
+    const [text, setText] = useState('');
+    const [poster, setPoster] = useState('');
+    const [songName, setSongName] = useState('');
+    const [songLink, setSongLink] = useState('');
+    const [fileLink, setFileLink] = useState('');
+    const [selectedFile, setSelectedFile] = useState(null); // State to store the selected file
+
+    const fileInputRef = useRef(null);
+
+    const openFileInput = () => {
+      fileInputRef.current.click();
+    };
 
 
+    const uploadImage = async () => {
+        if (!selectedFile) return;
+    
+        const formData = new FormData();
+        formData.append('file', selectedFile);
+        formData.append('upload_preset', 'fpl0cyrm'); // Replace with your Cloudinary upload preset
+    
+        try {
+          const response = await axios.post(
+            `https://api.cloudinary.com/v1_1/dxgpdylke/image/upload`, // Replace with your Cloudinary cloud name
+            formData,
+            {
+              onUploadProgress: (progressEvent) => {
+                const progress = Math.round((progressEvent.loaded / progressEvent.total) * 100);
+                console.log(progress)
+              },
+            }
+          );
+          setFileLink(response.data.secure_url)
+            return response.data.secure_url
+        } catch (error) {
+          console.error('Error uploading image to Cloudinary:', error);
+        }
+      };
+    const handleFileChange = (e) => {
+    setSelectedFile(e.target.files[0]);
+    }
+    useEffect(()=>{uploadImage()},[selectedFile])
     useEffect(() => {
         if (isLoading) {
             const interval = setInterval(() => {
@@ -23,73 +63,88 @@ function MainForm() {
             return () => clearInterval(interval);
         }
     }, [isLoading]);
+    function sendToBackEnd(){
+        const scriptUrl = 'https://script.google.com/macros/s/AKfycbxGP3KCZSJnPGV6Od6yb_cxs1Nd6KdSC6jtX4t36jwx6r1iCJgU9QTOAr9PRHaES8Qe/exec';
 
-    // function convertToPDF() {
-    //     try {
-    //         // Replace with your Google Apps Script web app URL
-    //         const scriptUrl = 'https://script.google.com/macros/s/AKfycbxsGGayDNWEtXeorWZtF8EPNAk260pHZd89-9WA_BWCGOHWD4hRhsIjFhI7Vx4ETcyA/exec';
-    //         setIsLoading(true)
+        const formData = new FormData();
+        formData.append('Text', text);
+        formData.append('Song Name', songName);
+        formData.append('Song Link', songLink);
+        formData.append('Poster', poster);
+        formData.append('fileLink', fileLink);
 
-    //         const currentDate = new Date();
-    //         const hebrewDateStr = today.toString('h');
-    //         const hebrewDateArray = hebrewDateStr.split(' ');
+        axios.post(scriptUrl, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data', // Set the Content-Type header to multipart/form-data
+            },
+        })
+            .then((response) => {
+                setIsLoading(false);
+                props.setFormIsOpen(false)
+                console.log(response.data);
+                // window.location.href = response.data;
+            })
+            .catch((error) => {
+                setIsLoading(false);
+            });
+    }
+    function handleSubmit() {
+        try {
+            // Replace with your Google Apps Script web app URL
+            setIsLoading(true)
+            if (fileLink!==''){
+                sendToBackEnd()
+            }
+            else{
+                setTimeout(() => {
+                    if (fileLink!=='') {
+                        sendToBackEnd()
+                    } else {
+                      console.log('Image is still null after retry.');
+                    }
+                  }, 1000);
+            }
 
-    //         // Create a FormData object
-    //         const formData = new FormData();
-    //         formData.append('title', title);
-    //         formData.append('context', context);
-    //         formData.append('full_name', fullName);
-    //         formData.append('team_number', teamNumber);
-    //         formData.append('g_day', currentDate.getDate());
-    //         formData.append('g_month', "ב" + month_in_hebrow[currentDate.getMonth()]);
-    //         formData.append('g_year', currentDate.getFullYear());
-    //         formData.append('h_day', hebrewDateArray[0]);
-    //         formData.append('h_month', hebrewDateArray[1]);
-    //         formData.append('h_year', hebrewDateArray[2]);
 
-    //         axios.post(scriptUrl, formData, {
-    //             headers: {
-    //                 'Content-Type': 'multipart/form-data', // Set the Content-Type header to multipart/form-data
-    //             },
-    //         })
-    //             .then((response) => {
-    //                 setIsLoading(false);
-	// 		window.open(response.data);
-    //                 // window.location.href = response.data;
-    //             })
-    //             .catch((error) => {
-    //                 setIsLoading(false);
-    //             });
-
-
-    //     } catch (error) {
-    //         console.error('An error occurred while converting to PDF.');
-    //     }
-    // }
+        } catch (error) {
+            console.error('An error occurred while converting to PDF.');
+        }
+    }
     return (
         <div className="main-form">
             <div className='input-block'>
-                <label className='form-input-lable'>כותרת העבודה</label>
-                <input type='text' className='form-input' dir='rtl' value={title} onChange={(value) => { setTitle(value.target.value) }}></input>
+                <label className='form-input-lable'>הקדשה</label>
+                <textarea type='text' className='form-input' dir='rtl' value={text} onChange={(value) => { setText(value.target.value) }}></textarea>
             </div>
             <div className='input-block'>
-                <label className='form-input-lable'>שם מלא</label>
-                <input type='text' className='form-input' dir='rtl' value={fullName} onChange={(value) => { setFullName(value.target.value) }}></input>
+                <label className='form-input-lable'>שם המקדיש</label>
+                <input type='text' className='form-input' dir='rtl' value={poster} onChange={(value) => { setPoster(value.target.value) }}></input>
             </div>
             <div className='input-block'>
-                <label className='form-input-lable'>צוות</label>
-                <input type='text' className='form-input' dir='rtl' value={teamNumber} onChange={(value) => { setTeamNumber(value.target.value) }}></input>
+                <label className='form-input-lable'>שם השיר</label>
+                <input type='text' className='form-input' dir='rtl' value={songName} onChange={(value) => { setSongName(value.target.value) }}></input>
             </div>
             <div className='input-block'>
-                <label className='form-input-lable'>תוכן העבודה</label>
-                <textarea className='form-input textarea' dir='rtl' style={{ height: "37vh" }} value={context} onChange={(value) => { setContext(value.target.value) }}></textarea>
+                <label className='form-input-lable'>לינק לשיר</label>
+                <input type='text' className='form-input' dir='rtl' value={songLink} onChange={(value) => { setSongLink(value.target.value) }}></input>
+            </div>
+            <div className='input-block'>
+                <label className='form-input-lable'>תמונה</label>
+                <button onClick={openFileInput} className='form-input' style={{textAlign:"center", borderColor:fileLink===''?"black":"green" }}>בחר תמונה</button>
+                <input
+        type="file"
+        ref={fileInputRef}
+        style={{ display: 'none' }}
+        onChange={handleFileChange}
+      />
             </div>
             <button
                 className={`submit-button ${isLoading ? 'loading' : ''}`}
-                onClick={()=>{console.log("")}}
+                onClick={handleSubmit}
                 disabled={isLoading}
+                
             >
-                {isLoading ? `${dots}מייצר את העבודה` : `הורד עבודה`}
+                {isLoading ? `${dots}שולח ` : `שלח`}
             </button>
 
         </div>

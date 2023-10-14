@@ -1,10 +1,11 @@
 .card {
-  background-color: bisque;
+  background-color: #A9C5B9;
   padding: 2rem;
   text-align: center;
   width: 70%;
   margin: 0 auto;
   border-radius: 10px;
+  border: 2px solid #ed6335;
   }
   
   .card img {
@@ -13,14 +14,14 @@
   }
 
   .song-button{
-
-    background-color: #0094ff;
-      color: #fff;
+    background-color: #F1EAE4;
+    color: black;
+    /* background-color: #0094ff;
+      color: #fff; */
       border: none;
       outline: none;
       font-size: 1.2rem;
       border-radius: 10px;
       padding: 11px 1rem;
       margin: 0 0.5rem ;
-      width: 7.5rem;
   }

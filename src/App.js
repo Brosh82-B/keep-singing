@@ -2,62 +2,52 @@ import "./App.css";
 import AppFooter from "./components/AppFooter/AppFooter";
 import AppHeader from "./components/AppHeader/AppHeader";
 import { useState, useEffect } from "react";
-import { v4 as uuidv4 } from "uuid";
 import Carousel from "./components/Carousel";
-import Loading from "./components/Loading/Loading";
 import Card from "./components/Card";
 import CenteredCarousel from "./components/CenteredCarousel";
+import MainForm from "./components/MainForm/MainForm";
+import CloudinaryUploader from "./components/CloudinaryUploader";
+import plusIcon from "./img/plus.svg";
 function App() {
-  const [cardsList, setCardsList] = useState([]);
-  const [loading, setLoading] = useState(true);
-  useEffect(() => {
-    fetch(
-      "https://script.google.com/macros/s/AKfycbxarKoxOW1GBMVZV5Fu9NtLorAcpcNaFSGRgNV5_j3friPb5MyK9JZ9OPJ7E7524yO8/exec"
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        let tempList = [];
-        data.forEach((element) => {
-          let tempContent = (
-            <Card
-              image={element.Image}
-              text={element.Text}
-              songName={element["Song Name"]}
-              songLink={element["Song Link"]}
-              Title={element.Title}
-              Poster={element.Poster}
-            />
-          );
-          tempList.push({
-            key: uuidv4(),
-            content: tempContent,
-          });
-        });
-        setCardsList(tempList);
-      });
-  }, []);
-  useEffect(() => {
-    if (cardsList.length > 0) {
-      console.log(cardsList);
-      setLoading(false);
-    }
-  }, [cardsList]);
+  const [formIsOpen, setFormIsOpen] = useState(false);
+  const [rotation, setRotation] = useState(0);
+
   return (
     <div className="App">
       <div className="header">
-        <h2 style={{ textAlign: "center" }}>ממשיכים לנגן</h2>
+        <img
+          src={plusIcon}
+          alt="X"
+          className="plus-button"
+          style={{ transform: `rotate(${rotation}deg)` }}
+          onClick={() => {
+            if (formIsOpen) {
+              setRotation(0);
+              setFormIsOpen(false);
+            } else {
+              setRotation(45);
+              setFormIsOpen(true);
+            }
+          }}
+        ></img>
+
+        <div>
+          <h2 style={{ textAlign: "center" }}>מוכרחים להמשיך לנגן</h2>
+          <p style={{ marginTop: "-3%" }}>אֱמֹר מְעַט וַעֲשֵׂה הַרְבֵּה</p>
+        </div>
       </div>
 
       <div className="how-are-we">
-        ברוכים הבאים לממשיכים לנגן, מטרת העמוד היא ליצור פלטפורמה לשיתוף רגשות
-        ותחושות, לנצור אנשים ואת התקופה בעזרת הכוח שבמילים ובמנגינה מאחוריהן אם
-        תרצו מוזמנים לשתף אותנו בשיר שמתקשר לכם לרוח התקופה, אדם שאתם רוצים
-        לנצור או מקרה מסוים ליצירת אווירת שיתוף ואחווה מאיתנו צוערי פלוגה ב מתן
-        ארד וברק פישר.
+        {`ברוכים הבאים למוכרחים להמשיך לנגן, מטרת העמוד היא ליצור פלטפורמה לשיתוף רגשות ותחושות, לנצור אנשים ואת התקופה בעזרת הכוח שבמילים ובמנגינה מאחוריהן
+אם תרצו מוזמנים לשתף אותנו בשיר שמתקשר לכם לרוח התקופה, אדם שאתם רוצים לנצור או מקרה מסוים ליצירת אווירת שיתוף ואחווה.
+בשביל להקשיב לשיר לחצו על הלחצן עם השם וזה יעביר אתכם ליוטיוב להשמעה :)
+מאיתנו צוערי פלוגה ב' מתן ארד וברק פישר. `}
       </div>
-      <div className="">
-        {!loading ? <CenteredCarousel cardsList={cardsList} /> : <Loading />}
-      </div>
+      {formIsOpen ? (
+        <MainForm setFormIsOpen={setFormIsOpen} />
+      ) : (
+        <CenteredCarousel />
+      )}
     </div>
   );
 }

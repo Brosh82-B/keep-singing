@@ -4,32 +4,41 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import Card from './Card';
 import { useState } from 'react';
-const CenteredCarousel = (props) => {
-    const [cardsList, setCardsList] = useState([]);
+import { v4 as uuidv4 } from "uuid";
+import Loading from './Loading/Loading'
 
-  useEffect(() => {
+function CenteredCarousel (props) {
+  const [cardsList, setCardsList] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+      if (cardsList.length > 0) {
+        setLoading(false);
+      }
+    }, [cardsList]);
+
+    useEffect(() => {
     fetch(
-      "https://script.google.com/macros/s/AKfycbxarKoxOW1GBMVZV5Fu9NtLorAcpcNaFSGRgNV5_j3friPb5MyK9JZ9OPJ7E7524yO8/exec"
+      "https://script.google.com/macros/s/AKfycbxGP3KCZSJnPGV6Od6yb_cxs1Nd6KdSC6jtX4t36jwx6r1iCJgU9QTOAr9PRHaES8Qe/exec"
     )
       .then((response) => response.json())
       .then((data) => {
         let tempList = [];
         data.forEach((element) => {
-          let tempContent = 
-            <Card
-              image={element.Image}
-              text={element.Text}
-              songName={element["Song Name"]}
-              songLink={element["Song Link"]}
-              Title={element.Title}
-              Poster={element.Poster}
-            />
-          
-          tempList.push(tempContent);
+          tempList.push( <Card
+          key={uuidv4()}
+            element={element}
+            image={element.Image}
+            text={element.Text}
+            songName={element["Song Name"]}
+            songLink={element["Song Link"]}
+            Poster={element.Poster}
+          />);
         });
         setCardsList(tempList);
       });
   }, []);
+
   let settings = {
     centerMode: true,
     centerPadding: '60px',
@@ -56,11 +65,12 @@ const CenteredCarousel = (props) => {
     ]
   }
   return (
-        <Slider {...settings}>
-          {cardsList.map((element)=>{
-            return element
-          })}
-        </Slider>
+    loading?<Loading/>:<Slider {...settings}>
+    {cardsList.map((element)=>{
+      return element
+    })}
+  </Slider>
+        
   );
 };
 
