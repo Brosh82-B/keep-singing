@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/keep-singing/static/css/main.2dd7221d.css",
-    "main.js": "/keep-singing/static/js/main.e2a37f07.js",
+    "main.css": "/keep-singing/static/css/main.b4320e00.css",
+    "main.js": "/keep-singing/static/js/main.eba6aac8.js",
     "static/media/linkGif.gif": "/keep-singing/static/media/linkGif.a333cbb1439915526421.gif",
     "static/media/slick.svg": "/keep-singing/static/media/slick.2630a3e3eab21c607e21.svg",
     "static/media/slick.eot": "/keep-singing/static/media/slick.a4e97f5a2a64f0ab1323.eot",
@@ -9,11 +9,11 @@
     "static/media/plus.svg": "/keep-singing/static/media/plus.7083a461607b11edf9695e635779f861.svg",
     "static/media/slick.woff": "/keep-singing/static/media/slick.295183786cd8a1389865.woff",
     "index.html": "/keep-singing/index.html",
-    "main.2dd7221d.css.map": "/keep-singing/static/css/main.2dd7221d.css.map",
-    "main.e2a37f07.js.map": "/keep-singing/static/js/main.e2a37f07.js.map"
+    "main.b4320e00.css.map": "/keep-singing/static/css/main.b4320e00.css.map",
+    "main.eba6aac8.js.map": "/keep-singing/static/js/main.eba6aac8.js.map"
   },
   "entrypoints": [
-    "static/css/main.2dd7221d.css",
-    "static/js/main.e2a37f07.js"
+    "static/css/main.b4320e00.css",
+    "static/js/main.eba6aac8.js"
   ]
 }
